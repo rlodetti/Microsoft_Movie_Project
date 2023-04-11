@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[7]:
+# In[1]:
 
-
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -35,7 +35,7 @@ def producer_runtime(df):
     #ax.yaxis.set_major_formatter(lambda x, pos: f'${int(x/1000000)}')
     ax.set_xticklabels(['High ROI\nProducers', 'Low ROI\nProducers'])
 
-def producer_genre(df):
+def producer_genre_old(df):
     genres = df.dropna(axis=0, subset=['producer_rank']).drop_duplicates(
         ['movie_id', 'genres'])
     top_gen = genres[genres['producer_rank'] == 'High ROI Producers']
@@ -69,4 +69,58 @@ def producer_genre(df):
         low.text(x, y, llabels[i], c='white', weight='bold', ha='right')
 
     high.xaxis.set_major_formatter(lambda x, pos: "{:.0%}".format(x))
+    
+    
+    
+    
+    
+    
+    
+    
+def producer_genre(df):
+    genres = df.dropna(axis=0, subset=['producer_rank']).drop_duplicates(
+        ['movie_id', 'genres'])
+    top_gen = genres[genres['producer_rank'] == 'High ROI Producers']
+    bot_gen = genres[genres['producer_rank'] == 'Low ROI Producers']
+    s1 = top_gen['genres'].value_counts(normalize=True)[:5]
+    s2 = bot_gen['genres'].value_counts(normalize=True)[:5]
+    s3 = genres['genres'].value_counts(normalize=True)
+    s4 = pd.Series([s3[i] for i in list(s1.index)],index=list(s1.index))
+    s5 = pd.Series([s3[i] for i in list(s2.index)],index=list(s2.index))
+    df1 = pd.concat([s1,s4],axis=1).reset_index().rename(columns={'index':'genre','genres':'High ROI Producers',0:'Average'}).melt('genre')
+    df2 = pd.concat([s2,s5],axis=1).reset_index().rename(columns={'index':'genre','genres':'Low ROI Producers',0:'Average'}).melt('genre')
+
+    s1_list = list(s1.map(lambda x: "{:.0%}".format(x)))
+    s2_list = list(s2.map(lambda x: "{:.0%}".format(x)))
+    colors = {'High ROI Producers': '#377eb8', 'Average': '#999999', 'Low ROI Producers': '#ff7f00'}
+    sns.set_context('talk')
+    sns.set_style('whitegrid')
+    fig, ax = plt.subplots(1, 2, figsize=(19, 6), sharex=True)
+
+    high = sns.barplot(data = df1, y='genre', x='value', hue='variable',ax=ax[0], edgecolor='black', palette=colors)
+    low = sns.barplot(data = df2, y='genre', x='value', hue='variable',ax=ax[1], edgecolor='black', palette=colors)
+
+    patches = high.patches
+    for i in range(5):
+        x = patches[i].get_x()+patches[i].get_width()-.002
+        y = patches[i].get_y()+(patches[i].get_height()/1.35)
+        high.text(x, y, s1_list[i], c='white', weight='bold', ha='right')
+
+    patches1 = low.patches
+    for i in range(5):
+        x = patches1[i].get_x()+patches1[i].get_width()-0.002
+        y = patches1[i].get_y()+(patches[i].get_height()/1.35)
+        low.text(x, y, s2_list[i], c='white', weight='bold', ha='right')
+
+    fig.suptitle('Most Common Genres by Producer Type')
+    high.xaxis.set_major_formatter(lambda x, pos: "{:.0%}".format(x))
+    high.set(ylabel=None,xlabel=None)
+    low.set(ylabel=None,xlabel=None)
+
+    ax[0].legend([],[], frameon=False)
+    ax[1].legend([],[], frameon=False)
+    handles, labels = ax[0].get_legend_handles_labels()
+    handles.append(ax[1].get_legend_handles_labels()[0][0])
+    labels.append(ax[1].get_legend_handles_labels()[1][0])
+    fig.legend(handles, labels,loc=(0.78,0.1))
 

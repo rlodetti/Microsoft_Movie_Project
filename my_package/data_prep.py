@@ -1,7 +1,7 @@
 import pandas as pd
 import string
 
-def prep_box_office(df):
+def prep_the_numbers(df):
     # Convert currencies to integers.
     for i in ['production_budget', 'worldwide_gross']:
         df[i] = df[i].str.replace('$', '')
