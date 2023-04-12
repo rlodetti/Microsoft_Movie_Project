@@ -40,17 +40,20 @@ Once I had my list of producers, I compared the movies they made to look for any
 ***
 
 ### Producers & Movie Length
-Movies from producers with high ROI tended to have slightly shorter movies on average. A box plot has the advantage of showing the distribution of the data interest of just the measure of center. I excluded any outliers (1.5 times the IQR away from Q1 and Q3) to improve the visual. Excluding outliers also helps Microsoft to make business decisions based on what is most likely. 
+Movies from producers with high ROI tended to have slightly shorter movies on average. A box plot has the advantage of showing the distribution of the data interest of just the measure of center. I excluded any outliers (1.5 times the IQR away from Q1 and Q3) to improve the visual. Excluding outliers also helps Microsoft to make business decisions based on what is most likely.
+
 ![runtime](./images/runtime_viz.jpg)
 
 ### Producers & Production Budget
 This graph shows the stark difference in production budgets, with all of the movies from high ROI producers having a lower budget than 75% of the movies from low ROI producers (excluding outliers). The movie budgets for the high ROI producers are also much more consistent than movies from low ROI producers.
+
 ![budgets](./images/budgets_viz.jpg)
 
 ### Producers & Genres
 Initially, I looked at the most common occurring genre in each group. Then I decided to find the largest differences of frequency rate between the two groups. Displaying the differences between the groups makes it more clear which genres Microsoft should focus on or avoid. 
 
 Horror, thriller, and mystery genres were much more common in our high ROI producers movies dataset. Drama, comedy, and crime were more common in are low ROI producers movies dataset. 
+
 ![genres](./images/genre_viz.jpg)
 
 ## Conclusions
