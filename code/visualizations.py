@@ -17,11 +17,7 @@ def producer_budget(df):
                          subset=['producer_rank']).drop_duplicates('movie_id')
     sns.set_context('talk')
     sns.set_style('whitegrid')
-    colors = {
-        'High ROI Producers': '#377eb8',
-        'Average': '#999999',
-        'Low ROI Producers': '#ff7f00'
-    }
+    colors = {'High ROI Producers': '#377eb8', 'Low ROI Producers': '#ff7f00'}
     fig, ax = plt.subplots(figsize=(6, 6))
     sns.boxplot(data=df_clean,
                 x='producer_rank',
@@ -33,8 +29,10 @@ def producer_budget(df):
     ax.set(title='High ROI Producers Keep Budgets Low',
            ylabel='Budget (in millions)',
            xlabel=None,
-           xticklabels=['High ROI\nProducers', 'Low ROI\nProducers'])
+           xticklabels=['High ROI\nMovies', 'Low ROI\nMovies'],
+           position=[.19, 0.13, 0.75, 0.75])
     ax.yaxis.set_major_formatter(lambda x, pos: f'${int(x/1000000)}')
+
 
 def producer_runtime(df):
     """
@@ -46,11 +44,7 @@ def producer_runtime(df):
                          subset=['producer_rank']).drop_duplicates('movie_id')
     sns.set_context('talk')
     sns.set_style('whitegrid')
-    colors = {
-        'High ROI Producers': '#377eb8',
-        'Average': '#999999',
-        'Low ROI Producers': '#ff7f00'
-    }
+    colors = {'High ROI Producers': '#377eb8', 'Low ROI Producers': '#ff7f00'}
     fig, ax = plt.subplots(figsize=(6, 6))
     sns.boxplot(data=df_clean,
                 x='producer_rank',
@@ -62,8 +56,9 @@ def producer_runtime(df):
     ax.set(title='High ROI Producers Keep Movies Short',
            ylabel='Movie Length (in minutes)',
            xlabel=None,
-           xticklabels=['High ROI\nProducers', 'Low ROI\nProducers'],
-           position=[0.2,0.15,0.7,0.7])
+           xticklabels=['High ROI\nMovies', 'Low ROI\nMovies'],
+           position=[.19, 0.13, 0.75, 0.75])
+
 
 def producer_genre(df):
     """
@@ -75,50 +70,22 @@ def producer_genre(df):
     high_df = df[df['producer_rank'] == 'High ROI Producers']
     high_unique_df = high_df.drop_duplicates(['movie_id', 'genres'])
     high_rates_df = high_unique_df['genres'].value_counts(
-        normalize=True).reset_index()
-
-    low_df = df[df['producer_rank'] == 'Low ROI Producers']
-    low_unique_df = low_df.drop_duplicates(['movie_id', 'genres'])
-    low_rates_df = low_unique_df['genres'].value_counts(
-        normalize=True).reset_index()
-
-    # Merge data along genres.
-    merged_rates_df = pd.merge(high_rates_df,
-                               low_rates_df,
-                               how='outer',
-                               on='index').fillna(0)
-    merged_named_df = merged_rates_df.rename(
-        columns={
+        normalize=True).reset_index().rename(columns={
             'index': 'genre',
-            'genres_x': 'High ROI Producers',
-            'genres_y': 'Low ROI Producers'
+            'genres': 'rate',
         })
-
-    # Finding the largest differnces between high and low producers.
-    merged_named_df['abs_diff'] = abs(merged_named_df['High ROI Producers'] -
-                                      merged_named_df['Low ROI Producers'])
-    merged_sorted_df = merged_named_df.sort_values(
-        'abs_diff', ascending=False).drop('abs_diff', axis=1)
-
-    # Converting dataframe to long format, slicing to include relevant data for graphing.
-    merged_long_df = merged_sorted_df.melt('genre')
-
     sns.set_context('talk')
     sns.set_style('whitegrid')
-    colors = {'High ROI Producers': '#377eb8', 'Low ROI Producers': '#ff7f00'}
-    fig, ax = plt.subplots(figsize=(8, 6))
-    g = sns.barplot(
-        data=merged_long_df,
-        x='genre',
-        y='value',
-        hue='variable',
-        edgecolor='black',
-        palette=colors,
-        order=['Horror', 'Thriller', 'Mystery', 'Drama', 'Comedy', 'Crime'])
-    ax.tick_params(axis='y', labelright=True)
-    plt.legend(bbox_to_anchor=(.75, -.1))
-    g.yaxis.set_major_formatter(lambda x, pos: "{:.0%}".format(x))
-    g.set(title='Largest Differences in Genre Frequency Rate',
+    colors = {'Horror': '#377eb8', 'Thriller': '#377eb8', 'Mystery': '#377eb8'}
+    fig, ax = plt.subplots(figsize=(8, 4))
+    g = sns.barplot(data=high_rates_df,
+                    x='rate',
+                    y='genre',
+                    edgecolor='black',
+                    palette=colors,
+                    order=['Horror', 'Thriller', 'Mystery'])
+    g.xaxis.set_major_formatter(lambda x, pos: "{:.0%}".format(x))
+    g.set(title='Most Frequently Occuring Genres\nby High ROI Movies',
           ylabel=None,
           xlabel=None,
-          position=[0.1,0.23,0.8,0.7])    
+          position=[.19, 0.13, 0.75, 0.7])  
