@@ -7,6 +7,50 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def eda_viz(df):
+    """
+    This function takes the movies dataframe and creates a pairplot to look 
+    for correlations between Production Budgets, Worldwide Gross, and ROI.
+    """
+    df_no_outliers = df[df['ROI'] < 6000]  # Excluding some outliers to make the graphs more readable.
+    df_no_dupes = df_no_outliers.drop_duplicates('movie_id')
+    df_clean = df_no_dupes[['budget', 'worldwide_gross', 'ROI']]
+    sns.reset_defaults()
+    sns.pairplot(data=df_clean)
+    plt.show()
+
+def roi_viz(df):
+    """
+    This function takes the movies dataframe and creates a countplot to show
+    the distribution of the ROI of all movies in the dataset. 
+    """
+    df_no_dupes = df.drop_duplicates('movie_id')
+    ROI = df_no_dupes['ROI']
+
+    # Creating a new column to group and label ROI values
+    df_no_dupes.loc[ROI < 0, 'ROI_rank'] = '< 0'
+    df_no_dupes.loc[(ROI >= 0) & (ROI < 200), 'ROI_rank'] = '0 - 200'
+    df_no_dupes.loc[(ROI >= 200) & (ROI < 400), 'ROI_rank'] = '200 - 400'
+    df_no_dupes.loc[(ROI >= 400) & (ROI < 600), 'ROI_rank'] = '400 - 600'
+    df_no_dupes.loc[(ROI >= 600) & (ROI < 800), 'ROI_rank'] = '600 - 800'
+    df_no_dupes.loc[(ROI >= 800) & (ROI < 1000), 'ROI_rank'] = '800 - 1,000'
+    df_no_dupes.loc[ROI >= 1000, 'ROI_rank'] = '> 1,000'
+
+    sns.set_context('talk')
+    sns.set_style('whitegrid')
+    fig, ax = plt.subplots(figsize=(7,5))
+    sns.countplot(data=df_no_dupes,
+                  y='ROI_rank',
+                  order=[
+                      '< 0', '0 - 200', '200 - 400', '400 - 600', '600 - 800',
+                      '800 - 1,000', '> 1,000'
+                  ])
+    ax.set(title='Distribution of ROI', xlabel='Number of Movies')
+    ax.set_ylabel('ROI', rotation=0, labelpad=25)
+    fig.tight_layout(pad=0.5)
+    plt.show()
+    
+
 def producer_budget(df):
     """
     This function takes the movies dataframe and creates a box plot comparing
@@ -32,6 +76,7 @@ def producer_budget(df):
            xticklabels=['High ROI\nMovies', 'Low ROI\nMovies'],
            position=[.19, 0.13, 0.75, 0.75])
     ax.yaxis.set_major_formatter(lambda x, pos: f'${int(x/1000000)}')
+    plt.show()
 
 
 def producer_runtime(df):
@@ -58,6 +103,7 @@ def producer_runtime(df):
            xlabel=None,
            xticklabels=['High ROI\nMovies', 'Low ROI\nMovies'],
            position=[.19, 0.13, 0.75, 0.75])
+    plt.show()
 
 
 def producer_genre(df):
@@ -89,3 +135,5 @@ def producer_genre(df):
           ylabel=None,
           xlabel=None,
           position=[.19, 0.13, 0.75, 0.7])  
+    plt.show()
+    

@@ -5,6 +5,9 @@ def prep_the_numbers(df):
     """
     This function cleans and prepares the_numbers dataframe.
     """
+    # Dropping any rows where the worldwide_gross is zero.
+    df = df.loc[df['worldwide_gross'] != '$0']
+    
     # Convert currencies to integers.
     for i in ['production_budget', 'worldwide_gross']:
         df[i] = df[i].str.replace('$', '')
@@ -33,11 +36,15 @@ def prep_imdb(df):
     """
     This function cleans and prepares the imdb dataframe.
     """
+    # Drop missing values
+    df.dropna(inplace=True)
+    
     # Cleaning/Norming the title names
     for i in ['title']:
         df[i] = df[i].str.translate(str.maketrans('', '', string.punctuation))
         df[i] = df[i].str.replace(' ', '')
         df[i] = df[i].str.lower()
+    
     # Expanding the comma separated genres column into one genre per row.
     df['genres'] = df['genres'].map(lambda x: x.split(','), na_action='ignore')
     df = df.explode('genres')
@@ -79,4 +86,5 @@ def add_features(df):
            'producer_rank'] = 'High ROI Producers'
     df.loc[df['producer'].isin(low_roi_producers_list),
            'producer_rank'] = 'Low ROI Producers'
+    df['producer_rank'].fillna('Mid ROI Producers', inplace=True)
     return df

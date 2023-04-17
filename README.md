@@ -7,8 +7,7 @@
 <img src="./images/strip2.jpg">
 
 ## Overview
-***
-Microsoft would like to create a movie studio, but needs to better understand the movie landscape to help determine which kind of movies to produces. Analyzing trends of successful movie producers using data from The Numbers and IMDb shows patters with regards to movie length, production budget, and associated genres. Microsoft can use this information to improve decision-making when greenlighting movie projects. 
+Microsoft would like to create a movie studio, but needs to better understand the movie landscape to help determine which kind of movies to produces. Analyzing trends of successful movie producers using data from The Numbers and IMDb shows patterns with regards to movie length, production budget, and associated genres. Microsoft can use this information to improve decision-making when greenlighting movie projects. 
 
 
 ## Business Problem
@@ -23,12 +22,9 @@ The data used in this project has come from <a href="https://www.the-numbers.com
 
 The The Numbers dataset includes the finances a sampling of movies about 5700 movies ranging from 1915 to 2020. This dataset will be used to calculate the ROI for each movie.
 
-The IMDb dataset comes from the IMDb database. This table was created by merging the movie_basics, persons, and principals tables, filtering the merged rows for persons whose job is a producer. 
-
-This dataset includes information about over 67,000 movies and 64,000 producers ranging from 2010 to 2021. The genre dataset includes up to three genres associated with each movie from a list of 27 genres.
+The IMDb dataset comes from the IMDb database. This table was created by merging the movie_basics, persons, and principals tables, filtering the merged rows for persons whose job is a producer. This dataset includes information about over 67,000 movies and 64,000 producers ranging from 2010 to 2021. The genre dataset includes up to three genres associated with each movie from a list of 27 genres.
 
 ## Methods
-***
 
 This project uses descriptive analysis, including a comparison of two groups of movies to derive insights. 
 
@@ -54,17 +50,17 @@ Initially, I looked at the most common occurring genre in each group. Then I dec
 
 Horror, thriller, and mystery genres occurred most often in the high ROI producers dataset.
 
-![genres](./images/genre_viz.jpg)
+![genres](./images/genres_viz.jpg)
 
 ## Conclusions
 
 This analysis leads to three recommendations:
-- **Produce movies that are between 91 - 106 minutes.** The data shows that successful producers make movies slightly shorter than less successful producers. 
+- **Produce movies that are between 90 - 110 minutes.** The data shows that successful producers make movies slightly shorter than less successful producers. 
 - **Keep production budgets low.** Producing movies for a cheaper price would allow Microsoft to make more movies, minimize the cost of producing unsuccessful movies, and maximizing the ROI for successful movies. 
 - **Emphasize production of horror, thriller, and mystery movies.** Keeping these genres in mind when producing movies matches the market demand for movies and would help maximize ROI.
 
 ### Limitations
-- The data only includes movies through 2020. This doesn't account for movie trends in the last three years. 
+- The data only includes movies through 2019. This doesn't account for movie trends in the last three years. 
 - Due to a lack of foreign key in either data set to merge on, it is possible we excluded some movies which were in both datasets. 
 - Analysis was limited by the size of the dataset. Increasing the size could produce more representative results.  
 
